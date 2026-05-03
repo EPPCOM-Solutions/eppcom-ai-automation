@@ -1,5 +1,8 @@
 # ==========================================
 # Hetzner Server Config (/etc/wireguard/wg0.conf)
+# Host: workflows Server (CX33/CX42)
+# WICHTIG: In der Hetzner Cloud Firewall UDP Port 51820 öffnen!
+# IP-Range 10.8.0.0/24 kollidiert NICHT mit dem Hetzner Private Network 10.0.0.0/16.
 # ==========================================
 # [Interface]
 # Address = 10.8.0.1/24

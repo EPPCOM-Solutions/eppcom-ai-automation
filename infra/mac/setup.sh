@@ -41,4 +41,11 @@ sudo pfctl -E
 echo "Ollama neustarten..."
 brew services restart ollama
 
+echo "Setting up Pre-Warm Cronjob for Tenant-Voicebot (qwen3.6:27b)..."
+# Generiert einen Cronjob, der Mo-Fr um 8:00 das Modell für 12 Stunden vorlädt.
+# Verhindert 5-15s Lade-Latenz für den ersten Anrufer des Tages.
+CRON_JOB="0 8 * * 1-5 curl -s http://localhost:11434/api/generate -d '{\"model\":\"qwen3.6:27b\",\"keep_alive\":\"12h\",\"prompt\":\"\"}' > /dev/null 2>&1"
+(crontab -l 2>/dev/null | grep -v "http://localhost:11434/api/generate"; echo "$CRON_JOB") | crontab -
+echo "Cronjob installiert. Prüfe mit: crontab -l"
+
 echo "Setup abgeschlossen. Prüfe Tunnel & Cloudflared falls public-Zugriff gewünscht ist."
