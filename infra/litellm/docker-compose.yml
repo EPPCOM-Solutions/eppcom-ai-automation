@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  litellm:
+    image: ghcr.io/berriai/litellm:main-stable
+    container_name: litellm
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:4000:4000"   # Proxied by Coolify/Traefik
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+      - ./sensitive_guard.py:/app/sensitive_guard.py:ro
+    environment:
+      - ZAI_API_KEY=${ZAI_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - LITELLM_MASTER_KEY=${LITELLM_MASTER_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    networks:
+      - coolify
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.litellm.rule=Host(`litellm.eppcom.de`)
+      - traefik.http.routers.litellm.entrypoints=websecure
+      - traefik.http.routers.litellm.tls=true
+      - traefik.http.routers.litellm.tls.certresolver=letsencrypt
+      - traefik.http.services.litellm.loadbalancer.server.port=4000
+
+networks:
+  coolify:
+    external: true

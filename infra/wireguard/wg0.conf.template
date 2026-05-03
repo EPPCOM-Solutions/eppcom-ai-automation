@@ -1,0 +1,30 @@
+# ==========================================
+# Hetzner Server Config (/etc/wireguard/wg0.conf)
+# ==========================================
+# [Interface]
+# Address = 10.8.0.1/24
+# ListenPort = 51820
+# PrivateKey = <SERVER_PRIVATE_KEY>
+# PostUp   = iptables -A FORWARD -i wg0 -j ACCEPT
+# PostDown = iptables -D FORWARD -i wg0 -j ACCEPT
+# 
+# [Peer]
+# # Marcels MacBook
+# PublicKey = <MAC_PUBLIC_KEY>
+# AllowedIPs = 10.8.0.10/32
+
+# ==========================================
+# Mac Client Config (~/.wireguard/wg0.conf)
+# ==========================================
+# [Interface]
+# PrivateKey = <MAC_PRIVATE_KEY>
+# Address = 10.8.0.10/32
+# DNS = 1.1.1.1
+#
+# [Peer]
+# PublicKey = <SERVER_PUBLIC_KEY>
+# Endpoint = 94.130.170.167:51820
+# AllowedIPs = 10.8.0.0/24, 10.0.0.0/16
+#
+# # WICHTIG für NAT/Hotspot-Traversal:
+# PersistentKeepalive = 25
